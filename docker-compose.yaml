@@ -14,9 +14,9 @@ services:
     labels:
       - "traefik.docker.network=traefik"
       - "traefik.backend=monreseau"
-      - "traefik.frontend.rule=Host:monreseau.fr"
+      - "traefik.frontend.rule=Host:vitemonreseau.com, vitemonreseau.fr"
       - "traefik.port=80"
-      - "traefik.frontend.forcehost=monreseau.com"
+      - "traefik.frontend.forcehost=vitemonreseau.com"
     links:
       - php
 
