@@ -1,0 +1,36 @@
+version: "3.5"
+services:
+  httpd:
+    image: httpd:latest
+    ports:
+      - "80:80"
+    #expose:
+    #  - "80"
+    volumes:
+      - ./app:/app
+      - ./conf:/usr/local/apache2/conf
+      - ./logs/front:/logs
+
+    labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.backend=monreseau"
+      - "traefik.frontend.rule=Host:monreseau.fr"
+      - "traefik.port=80"
+      - "traefik.frontend.forcehost=monreseau.com"
+    links:
+      - php
+
+    #networks:
+    #  - traeffik
+  php:
+    image: php:fpm
+    volumes:
+      - ./app/:/app
+      - ./logs:/logs
+    #networks:
+    #  - traeffik
+
+#networks:
+#  traeffik:
+#    external:
+#      name: traefik_webgateway
