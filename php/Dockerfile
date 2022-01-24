@@ -3,14 +3,16 @@ FROM php:8.1.2-fpm
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
  && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini"
 
-RUN apt-get update && apt-get install -y apt-utils zip git openssh-client libzip-dev zlib1g-dev libicu-dev g++  libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev \
-    libfreetype6-dev \
-    libjpeg-dev \
-    libxpm-dev \
-    libvpx-dev \
-    libwebp-dev
+RUN apt-get update -y && apt-get upgrade -y
+RUN  apt-get install -y apt-utils zip git openssh-client  g++
+RUN  apt-get install -y libzip-dev zlib1g-dev libicu-dev  libfreetype6-dev
+RUN  apt-get install -y libjpeg62-turbo-dev
+RUN  apt-get install -y libpng-dev
+RUN  apt-get install -y libfreetype6-dev
+RUN  apt-get install -y libjpeg-dev
+RUN  apt-get install -y libxpm-dev
+RUN  apt-get install -y libvpx-dev
+RUN  apt-get install -y libwebp-dev
 RUN docker-php-ext-install zip
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
