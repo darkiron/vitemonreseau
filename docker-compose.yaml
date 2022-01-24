@@ -2,35 +2,37 @@ version: "3.5"
 services:
   httpd:
     image: httpd:latest
-    ports:
-      - "80:80"
-    #expose:
-    #  - "80"
+    #ports:
+    #  - "80:80"
+    expose:
+      - "80"
     volumes:
       - ./app:/app
       - ./conf:/usr/local/apache2/conf
       - ./logs/front:/logs
 
     labels:
+      - "traefik.enable=true"
       - "traefik.docker.network=traefik"
-      - "traefik.backend=monreseau"
-      - "traefik.frontend.rule=Host:vitemonreseau.com, vitemonreseau.fr"
-      - "traefik.port=80"
-      - "traefik.frontend.forcehost=vitemonreseau.com"
+      - "traefik.http.routers.vitemonreseau.rule=Host(`vitemonreseau.com`, `vitemonreseau.fr`,`www.vitemonreseau.com`, `www.vitemonreseau.fr`)"
+      - "traefik.http.routers.vitemonreseau.tls.certresolver=le"
+      - "traefik.http.routers.vitemonreseau.entrypoints=websecure, web"
     links:
       - php
 
-    #networks:
-    #  - traeffik
+    networks:
+      - traeffik
   php:
-    image: php:fpm
-    volumes:
-      - ./app/:/app
-      - ./logs:/logs
-    #networks:
-    #  - traeffik
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile
 
-#networks:
-#  traeffik:
-#    external:
-#      name: traefik_webgateway
+    volumes:
+      - ./app:/app
+    networks:
+      - traeffik
+
+networks:
+  traeffik:
+    external:
+      name: traefik_webgateway
